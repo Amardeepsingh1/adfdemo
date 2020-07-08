@@ -1,0 +1,13 @@
+{
+	"name": "ds_light_Pull_Master",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_light",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

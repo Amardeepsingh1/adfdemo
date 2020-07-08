@@ -1,0 +1,39 @@
+{
+	"name": "ds_lightstorage",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_lightstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pfilename": {
+				"type": "string",
+				"defaultValue": "abc"
+			},
+			"pContainerName": {
+				"type": "string",
+				"defaultValue": "def"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pfilename",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pContainerName",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
