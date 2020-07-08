@@ -61,12 +61,6 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
-					},
-					{
-						"activity": "get_dest_Container",
-						"dependencyConditions": [
-							"Succeeded"
-						]
 					}
 				],
 				"policy": {
@@ -220,43 +214,6 @@
 							"conf_type": {
 								"type": "String",
 								"value": "incr_col_name"
-							},
-							"table_name": {
-								"type": "String",
-								"value": {
-									"value": "@pipeline().parameters.ptable_name",
-									"type": "Expression"
-								}
-							}
-						},
-						"queryTimeout": "02:00:00"
-					},
-					"dataset": {
-						"referenceName": "ds_light_Pull_Master",
-						"type": "DatasetReference"
-					}
-				}
-			},
-			{
-				"name": "get_dest_Container",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[get_conf_value]",
-						"storedProcedureParameters": {
-							"conf_type": {
-								"type": "String",
-								"value": "dest_container"
 							},
 							"table_name": {
 								"type": "String",
