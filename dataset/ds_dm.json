@@ -1,0 +1,22 @@
+{
+	"name": "ds_dm",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dm",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "staging",
+				"container": "datamovement"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
