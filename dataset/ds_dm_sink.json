@@ -1,0 +1,22 @@
+{
+	"name": "ds_dm_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dm",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "tobeprocessed",
+				"container": "datamovement"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
