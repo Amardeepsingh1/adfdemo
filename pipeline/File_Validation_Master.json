@@ -101,7 +101,7 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"pFileName": {
-										"value": "item().name",
+										"value": "@{item().name}",
 										"type": "Expression"
 									},
 									"pBatchId": {
@@ -134,7 +134,10 @@
 										"type": "Int32"
 									},
 									"value": {
-										"value": "item().name",
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
 										"type": "String"
 									}
 								}
