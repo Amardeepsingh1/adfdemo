@@ -41,6 +41,10 @@
 			"pFileName": {
 				"type": "string",
 				"defaultValue": "abc"
+			},
+			"pBatchId": {
+				"type": "string",
+				"defaultValue": "23"
 			}
 		},
 		"annotations": []

@@ -84,7 +84,14 @@
 						{
 							"name": "File validation pipeline",
 							"type": "ExecutePipeline",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Stored procedure1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
@@ -96,8 +103,45 @@
 									"pFileName": {
 										"value": "item().name",
 										"type": "Expression"
+									},
+									"pBatchId": {
+										"value": "@activity('Create Batch Id').output.firstRow.a",
+										"type": "Expression"
 									}
 								}
+							}
+						},
+						{
+							"name": "Stored procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[insert_temp_log]",
+								"storedProcedureParameters": {
+									"batch_id": {
+										"value": {
+											"value": "@activity('Create Batch Id').output.firstRow.a",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"value": {
+										"value": "item().name",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_light",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
