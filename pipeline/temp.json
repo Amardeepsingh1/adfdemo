@@ -57,7 +57,7 @@
 					"storedProcedureParameters": {
 						"pfile_name": {
 							"value": {
-								"value": "@{activity('Get Metadata1').output.structure.name}",
+								"value": "@activity('Get Metadata1').output.structure.[0]",
 								"type": "Expression"
 							},
 							"type": "String"
