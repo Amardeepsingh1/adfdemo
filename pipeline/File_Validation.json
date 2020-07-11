@@ -50,7 +50,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals('goo','goo')",
+						"value": "@equals(activity('Duplicate File CHeck').output.firstRow.a,'goo')",
 						"type": "Expression"
 					}
 				}
