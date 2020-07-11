@@ -1,0 +1,32 @@
+{
+	"name": "ds_fv_stagingFolderFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_lightstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_p_fileName": {
+				"type": "string",
+				"defaultValue": "abc"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ds_p_fileName",
+					"type": "Expression"
+				},
+				"folderPath": "staging",
+				"fileSystem": "datamovement"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
