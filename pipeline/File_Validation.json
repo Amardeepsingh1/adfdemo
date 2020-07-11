@@ -50,7 +50,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(\nactivity('Duplicate File CHeck').output.firstRow.a,\n'not exists'\n)",
+						"value": "@equals(\n'not exists',\n'not exists'\n)",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
