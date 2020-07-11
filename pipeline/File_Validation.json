@@ -23,7 +23,7 @@
 							"pfile_name": {
 								"type": "String",
 								"value": {
-									"value": "item().name",
+									"value": "@pipeline().parameters.pFileName",
 									"type": "Expression"
 								}
 							}
