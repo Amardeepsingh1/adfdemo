@@ -34,16 +34,9 @@
 				}
 			},
 			{
-				"name": "Stored procedure1",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Get Metadata1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -53,20 +46,16 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[fv_duplicate_file_chec]",
-					"storedProcedureParameters": {
-						"pfile_name": {
-							"value": {
-								"value": "@activity('Get Metadata1').output.structure.[0]",
-								"type": "Expression"
-							},
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_light",
-					"type": "LinkedServiceReference"
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select columnName from FV_name_check where source_identified='sr' ",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
