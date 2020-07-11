@@ -50,7 +50,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "equals(string(activity('Duplicate File CHeck').output.firstRow.a),string('not exists'))",
+						"value": "@equals(activity('Duplicate File CHeck').output.firstRow.a,\"not exists\")",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
