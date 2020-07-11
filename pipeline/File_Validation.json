@@ -1,0 +1,48 @@
+{
+	"name": "File_Validation",
+	"properties": {
+		"description": "validates files then accepts or rejects them",
+		"activities": [
+			{
+				"name": "File_exists_check",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[fv_duplicate_file_chec]",
+						"storedProcedureParameters": {
+							"pfile_name": {
+								"type": "String",
+								"value": {
+									"value": "item().name",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pFileName": {
+				"type": "string",
+				"defaultValue": "abc"
+			}
+		},
+		"annotations": []
+	}
+}
