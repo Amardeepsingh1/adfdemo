@@ -123,12 +123,43 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "false",
-							"type": "Wait",
+							"name": "Update to failed",
+							"type": "SqlServerStoredProcedure",
 							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
-								"waitTimeInSeconds": 1
+								"storedProcedureName": "[dbo].[fv_insert_Update_Tracking]",
+								"storedProcedureParameters": {
+									"pBatchid": {
+										"value": {
+											"value": "@pipeline().parameters.pBHID",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"pFileName": {
+										"value": {
+											"value": "@pipeline().parameters.pInvokedFileName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"pReason": {
+										"value": "Improper column sequence",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_light",
+								"type": "LinkedServiceReference"
 							}
 						}
 					],
