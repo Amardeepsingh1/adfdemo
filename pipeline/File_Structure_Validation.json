@@ -1,0 +1,28 @@
+{
+	"name": "File_Structure_Validation",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			}
+		],
+		"parameters": {
+			"pInvokedFileStructure": {
+				"type": "string"
+			},
+			"pInvokedFileColCount": {
+				"type": "string"
+			},
+			"pInvokedFileName": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
