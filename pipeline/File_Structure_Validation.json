@@ -66,6 +66,19 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "testarray",
+					"value": {
+						"value": "@join(['a','b','c'],'.')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -80,6 +93,32 @@
 			"pInvokedFileName": {
 				"type": "string",
 				"defaultValue": "dec"
+			},
+			"temparray": {
+				"type": "string",
+				"defaultValue": [
+					{
+						"name": "col1",
+						"type": "String"
+					},
+					{
+						"name": "col2",
+						"type": "String"
+					},
+					{
+						"name": "col3",
+						"type": "String"
+					},
+					{
+						"name": "col4",
+						"type": "String"
+					}
+				]
+			}
+		},
+		"variables": {
+			"testarray": {
+				"type": "String"
 			}
 		},
 		"annotations": []
