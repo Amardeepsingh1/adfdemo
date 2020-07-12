@@ -74,8 +74,8 @@
 				"defaultValue": "acc"
 			},
 			"pInvokedFileColCount": {
-				"type": "string",
-				"defaultValue": "4"
+				"type": "int",
+				"defaultValue": 4
 			},
 			"pInvokedFileName": {
 				"type": "string",
