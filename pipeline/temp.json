@@ -44,7 +44,7 @@
 				"typeProperties": {
 					"variableName": "debugarray",
 					"value": {
-						"value": "@variables('appendedarrayvariable')",
+						"value": "@join(variables('appendedarrayvariable'),'|')",
 						"type": "Expression"
 					}
 				}
