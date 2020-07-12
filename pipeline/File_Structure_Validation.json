@@ -97,6 +97,53 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "CompareStructureStrings",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "CreateConcatenatedStringFileStructure",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "CreateConcatenatedStringDatabaseStructure",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(\nvariables('vStringDatabaseStructure'),variables('vStringFileStructure')\n)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "false",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "true",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
