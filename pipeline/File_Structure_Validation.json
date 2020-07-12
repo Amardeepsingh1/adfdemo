@@ -1,6 +1,104 @@
 {
 	"name": "File_Structure_Validation",
 	"properties": {
+		"activities": [
+			{
+				"name": "fileStructureiterate",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.pInvokedFileStructure",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "ExtractFileStructure",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "vFileStructure",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "database_structure_iterate",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.pDatabaseStructure",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "ExtractDatabaseStructure",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "vDatabaseStructure",
+								"value": {
+									"value": "@item().columnname",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "CreateConcatenatedStringFileStructure",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "fileStructureiterate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vStringFileStructure",
+					"value": {
+						"value": "@join(variables('vFileStructure'),'|')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "CreateConcatenatedStringDatabaseStructure",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "database_structure_iterate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vStringDatabaseStructure",
+					"value": {
+						"value": "@join(variables('vDatabaseStructure'),'|')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
 		"parameters": {
 			"pInvokedFileStructure": {
 				"type": "array",
@@ -19,12 +117,22 @@
 				"defaultValue": "s"
 			},
 			"pBHID": {
-				"type": "int"
+				"type": "int",
+				"defaultValue": 0
 			}
 		},
 		"variables": {
-			"testarray": {
+			"vFileStructure": {
 				"type": "Array"
+			},
+			"vDatabaseStructure": {
+				"type": "Array"
+			},
+			"vStringFileStructure": {
+				"type": "String"
+			},
+			"vStringDatabaseStructure": {
+				"type": "String"
 			}
 		},
 		"annotations": []
