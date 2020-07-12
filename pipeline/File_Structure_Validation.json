@@ -70,14 +70,16 @@
 		],
 		"parameters": {
 			"pInvokedFileStructure": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "acc"
 			},
 			"pInvokedFileColCount": {
 				"type": "string",
-				"defaultValue": "8"
+				"defaultValue": "4"
 			},
 			"pInvokedFileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dec"
 			}
 		},
 		"annotations": []
