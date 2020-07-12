@@ -181,6 +181,40 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Get_column_count",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "File_Structure_Validation",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pInvokedFileStructure": {
+							"value": "@activity('Get_column_count').output.structure",
+							"type": "Expression"
+						},
+						"pInvokedFileColCount": {
+							"value": "@activity('Get_column_count').output.columnCount",
+							"type": "Expression"
+						},
+						"pInvokedFileName": {
+							"value": "@pipeline().parameters.pFileName",
+							"type": "Expression"
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
