@@ -96,6 +96,91 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "File_name_check",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "If Condition1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[fv_filename_validation]",
+					"storedProcedureParameters": {
+						"BHID": {
+							"value": {
+								"value": "@pipeline().parameters.pBatchId",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"var": {
+							"value": {
+								"value": "@pipeline().parameters.pFileName",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_light",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Get_column_count",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "File_name_check",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_fv_stagingFolderFile",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_p_fileName": {
+								"value": "@pipeline().parameters.pFileName",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"columnCount",
+						"structure"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings"
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
 			}
 		],
 		"parameters": {
