@@ -21,7 +21,7 @@
 							"typeProperties": {
 								"variableName": "appendedarrayvariable",
 								"value": {
-									"value": "item().name",
+									"value": "@item().name",
 									"type": "Expression"
 								}
 							}
