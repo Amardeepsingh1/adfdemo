@@ -17,6 +17,9 @@
 			"pDatabaseStructure": {
 				"type": "array",
 				"defaultValue": "s"
+			},
+			"pBHID": {
+				"type": "int"
 			}
 		},
 		"variables": {

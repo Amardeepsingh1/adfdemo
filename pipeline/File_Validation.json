@@ -218,6 +218,14 @@
 						"pInvokedFileName": {
 							"value": "@pipeline().parameters.pFileName",
 							"type": "Expression"
+						},
+						"pDatabaseStructure": {
+							"value": "@activity('GetColNamesFromDatabase').output.value",
+							"type": "Expression"
+						},
+						"pBHID": {
+							"value": "@pipeline().parameters.pBatchId",
+							"type": "Expression"
 						}
 					}
 				}
