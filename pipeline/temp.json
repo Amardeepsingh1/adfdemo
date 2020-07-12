@@ -75,13 +75,13 @@
 				"type": "array",
 				"defaultValue": [
 					{
-						"name": "1"
+						"name": "ab"
 					},
 					{
-						"name": "2"
+						"name": "cd"
 					},
 					{
-						"name": "3"
+						"name": "ef"
 					}
 				]
 			}
