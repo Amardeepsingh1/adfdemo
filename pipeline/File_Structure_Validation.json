@@ -75,7 +75,7 @@
 				"typeProperties": {
 					"variableName": "testarray",
 					"value": {
-						"value": "@join(['a','b','c'],'.')",
+						"value": "@join(createArray('a','b','c'),'.')",
 						"type": "Expression"
 					}
 				}
