@@ -28,6 +28,26 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach12",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "debugarray",
+					"value": {
+						"value": "@variables('appendedarrayvariable')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -48,6 +68,9 @@
 		},
 		"variables": {
 			"appendedarrayvariable": {
+				"type": "Array"
+			},
+			"debugarray": {
 				"type": "Array"
 			}
 		},
