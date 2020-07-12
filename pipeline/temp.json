@@ -3,62 +3,48 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata1",
-				"type": "GetMetadata",
+				"name": "ForEach1",
+				"type": "ForEach",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "ds_fv_stagingFolderFile",
-						"type": "DatasetReference",
-						"parameters": {
-							"ds_p_fileName": "sr_202001201120_inv_1.txt"
+					"items": {
+						"value": "@pipeline().parameters.arrayparam",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "appendedarrayvariable",
+								"value": {
+									"value": "item().name",
+									"type": "Expression"
+								}
+							}
 						}
-					},
-					"fieldList": [
-						"structure"
-					],
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings"
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
-					}
-				}
-			},
-			{
-				"name": "Lookup1",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select columnName from FV_name_check where source_identified='sr' ",
-						"queryTimeout": "02:00:00"
-					},
-					"dataset": {
-						"referenceName": "ds_light_Pull_Master",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
+					]
 				}
 			}
 		],
+		"parameters": {
+			"arrayparam": {
+				"type": "array",
+				"defaultValue": [
+					1,
+					2,
+					3
+				]
+			}
+		},
+		"variables": {
+			"appendedarrayvariable": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }
