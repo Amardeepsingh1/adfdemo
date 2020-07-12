@@ -101,8 +101,7 @@
 		],
 		"parameters": {
 			"pInvokedFileStructure": {
-				"type": "array",
-				"defaultValue": "acc"
+				"type": "array"
 			},
 			"pInvokedFileColCount": {
 				"type": "int",
@@ -113,8 +112,7 @@
 				"defaultValue": "dec"
 			},
 			"pDatabaseStructure": {
-				"type": "array",
-				"defaultValue": "s"
+				"type": "array"
 			},
 			"pBHID": {
 				"type": "int",
