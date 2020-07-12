@@ -191,6 +191,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "GetColNamesFromDatabase",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
@@ -214,6 +220,31 @@
 							"type": "Expression"
 						}
 					}
+				}
+			},
+			{
+				"name": "GetColNamesFromDatabase",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select columnname from FV_name_check where source_identified='sr' ",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
