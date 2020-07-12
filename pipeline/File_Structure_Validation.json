@@ -1,89 +1,9 @@
 {
 	"name": "File_Structure_Validation",
 	"properties": {
-		"activities": [
-			{
-				"name": "GetColumnCountFromDatabase",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select columnCount from FV_name_check where source_identified='sr' \n",
-						"queryTimeout": "02:00:00"
-					},
-					"dataset": {
-						"referenceName": "ds_light_Pull_Master",
-						"type": "DatasetReference"
-					}
-				}
-			},
-			{
-				"name": "If Condition1",
-				"type": "IfCondition",
-				"dependsOn": [
-					{
-						"activity": "GetColumnCountFromDatabase",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"expression": {
-						"value": "@equals(pipeline().parameters.pInvokedFileColCount\n,\nactivity('GetColumnCountFromDatabase').output.firstRow.columnCount)",
-						"type": "Expression"
-					},
-					"ifFalseActivities": [
-						{
-							"name": "FalseActivity",
-							"type": "Wait",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 1
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "TrueActivity",
-							"type": "Wait",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 1
-							}
-						}
-					]
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "testarray",
-					"value": {
-						"value": "@join(pipeline().parameters.temparray,'.')",
-						"type": "Expression"
-					}
-				}
-			}
-		],
 		"parameters": {
 			"pInvokedFileStructure": {
-				"type": "string",
+				"type": "array",
 				"defaultValue": "acc"
 			},
 			"pInvokedFileColCount": {
@@ -94,31 +14,14 @@
 				"type": "string",
 				"defaultValue": "dec"
 			},
-			"temparray": {
+			"pDatabaseStructure": {
 				"type": "array",
-				"defaultValue": [
-					{
-						"name": "col1",
-						"type": "String"
-					},
-					{
-						"name": "col2",
-						"type": "String"
-					},
-					{
-						"name": "col3",
-						"type": "String"
-					},
-					{
-						"name": "col4",
-						"type": "String"
-					}
-				]
+				"defaultValue": "s"
 			}
 		},
 		"variables": {
 			"testarray": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": []
