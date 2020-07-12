@@ -44,7 +44,27 @@
 				"typeProperties": {
 					"variableName": "debugarray",
 					"value": {
-						"value": "@join(variables('appendedarrayvariable'),'|')",
+						"value": "@variables('appendedarrayvariable')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "finalcolumn",
+					"value": {
+						"value": "@join(variables('debugarray'),'|')",
 						"type": "Expression"
 					}
 				}
@@ -72,6 +92,9 @@
 			},
 			"debugarray": {
 				"type": "Array"
+			},
+			"finalcolumn": {
+				"type": "String"
 			}
 		},
 		"annotations": []
