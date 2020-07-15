@@ -8,5 +8,8 @@
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
+	},
+	"data": {
+		"annotations": []
 	}
 }
