@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "empfile.txt",
 				"container": "restcontainer"
 			},
 			"columnDelimiter": ",",
