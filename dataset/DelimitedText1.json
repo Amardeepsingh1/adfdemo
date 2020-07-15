@@ -2,16 +2,16 @@
 	"name": "DelimitedText1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_blob_RestAPI",
+			"referenceName": "ls_lightstorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
-				"fileName": "empfile.txt",
-				"container": "restcontainer"
+				"type": "AzureBlobFSLocation",
+				"fileName": "empfile",
+				"fileSystem": "pull"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
