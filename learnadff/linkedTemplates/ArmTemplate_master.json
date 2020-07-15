@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'functionKey' of 'ls_af'"
 		},
+		"ls_blob_RestAPI_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_blob_RestAPI'"
+		},
 		"ls_light_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_light'"
@@ -19,9 +23,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_lightstorage'"
 		},
-		"ls_blob_RestAPI_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'ls_blob_RestAPI'"
+		"ls_RestService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://dummy.restapiexample.com/api/v1/employees"
 		},
 		"ls_af_properties_typeProperties_functionAppUrl": {
 			"type": "string",
@@ -30,10 +34,6 @@
 		"ls_lightstorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://lighttstorage.dfs.core.windows.net"
-		},
-		"ls_RestService_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "http://dummy.restapiexample.com/api/v1/employees"
 		},
 		"containerUri": {
 			"type": "string",
@@ -65,23 +65,23 @@
 					"ls_af_functionKey": {
 						"value": "[parameters('ls_af_functionKey')]"
 					},
+					"ls_blob_RestAPI_connectionString": {
+						"value": "[parameters('ls_blob_RestAPI_connectionString')]"
+					},
 					"ls_light_connectionString": {
 						"value": "[parameters('ls_light_connectionString')]"
 					},
 					"ls_lightstorage_accountKey": {
 						"value": "[parameters('ls_lightstorage_accountKey')]"
 					},
-					"ls_blob_RestAPI_connectionString": {
-						"value": "[parameters('ls_blob_RestAPI_connectionString')]"
+					"ls_RestService_properties_typeProperties_url": {
+						"value": "[parameters('ls_RestService_properties_typeProperties_url')]"
 					},
 					"ls_af_properties_typeProperties_functionAppUrl": {
 						"value": "[parameters('ls_af_properties_typeProperties_functionAppUrl')]"
 					},
 					"ls_lightstorage_properties_typeProperties_url": {
 						"value": "[parameters('ls_lightstorage_properties_typeProperties_url')]"
-					},
-					"ls_RestService_properties_typeProperties_url": {
-						"value": "[parameters('ls_RestService_properties_typeProperties_url')]"
 					}
 				}
 			},
