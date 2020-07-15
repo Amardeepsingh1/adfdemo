@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "learnadff"
 		},
+		"ls_af_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'ls_af'"
+		},
 		"ls_light_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_light'"
@@ -15,15 +19,150 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_lightstorage'"
 		},
+		"ls_blob_RestAPI_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_blob_RestAPI'"
+		},
+		"ls_af_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://sqlforapp.azurewebsites.net"
+		},
 		"ls_lightstorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://lighttstorage.dfs.core.windows.net"
+		},
+		"ls_RestService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://dummy.restapiexample.com/api/v1/employees"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/temp')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach12",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.arrayparam",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Append variable1",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "appendedarrayvariable",
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ForEach12",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "debugarray",
+							"value": {
+								"value": "@variables('appendedarrayvariable')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable2",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "finalcolumn",
+							"value": {
+								"value": "@join(variables('debugarray'),'|')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"arrayparam": {
+						"type": "array",
+						"defaultValue": [
+							{
+								"name": "ab"
+							},
+							{
+								"name": "cd"
+							},
+							{
+								"name": "ef"
+							}
+						]
+					}
+				},
+				"variables": {
+					"appendedarrayvariable": {
+						"type": "Array"
+					},
+					"debugarray": {
+						"type": "Array"
+					},
+					"finalcolumn": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_af')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "[parameters('ls_af_properties_typeProperties_functionAppUrl')]",
+					"functionKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_af_functionKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ls_light')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -53,6 +192,255 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_RestService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('ls_RestService_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_blob_RestAPI')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_blob_RestAPI_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/File_Structure_Validation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "fileStructureiterate",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.pInvokedFileStructure",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "ExtractFileStructure",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "vFileStructure",
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "database_structure_iterate",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.pDatabaseStructure",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "ExtractDatabaseStructure",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "vDatabaseStructure",
+										"value": {
+											"value": "@item().columnname",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "CreateConcatenatedStringFileStructure",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "fileStructureiterate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "vStringFileStructure",
+							"value": {
+								"value": "@join(variables('vFileStructure'),'|')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "CreateConcatenatedStringDatabaseStructure",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "database_structure_iterate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "vStringDatabaseStructure",
+							"value": {
+								"value": "@join(variables('vDatabaseStructure'),'|')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "CompareStructureStrings",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CreateConcatenatedStringFileStructure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "CreateConcatenatedStringDatabaseStructure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(\nvariables('vStringDatabaseStructure'),variables('vStringFileStructure')\n)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Update to failed",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[fv_insert_Update_Tracking]",
+										"storedProcedureParameters": {
+											"pBatchid": {
+												"value": {
+													"value": "@pipeline().parameters.pBHID",
+													"type": "Expression"
+												},
+												"type": "Int32"
+											},
+											"pFileName": {
+												"value": {
+													"value": "@pipeline().parameters.pInvokedFileName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"pReason": {
+												"value": "Improper column sequence",
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_light",
+										"type": "LinkedServiceReference"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "true",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"pInvokedFileStructure": {
+						"type": "array"
+					},
+					"pInvokedFileColCount": {
+						"type": "int",
+						"defaultValue": 4
+					},
+					"pInvokedFileName": {
+						"type": "string",
+						"defaultValue": "dec"
+					},
+					"pDatabaseStructure": {
+						"type": "array"
+					},
+					"pBHID": {
+						"type": "int",
+						"defaultValue": 0
+					}
+				},
+				"variables": {
+					"vFileStructure": {
+						"type": "Array"
+					},
+					"vDatabaseStructure": {
+						"type": "Array"
+					},
+					"vStringFileStructure": {
+						"type": "String"
+					},
+					"vStringDatabaseStructure": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_light')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/tobefailed')]",
@@ -86,6 +474,71 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_light')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StagingFolder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_lightstorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "staging",
+						"fileSystem": "datamovement"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_lightstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_fv_stagingFolderFile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_lightstorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_p_fileName": {
+						"type": "string",
+						"defaultValue": "abc"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().ds_p_fileName",
+							"type": "Expression"
+						},
+						"folderPath": "staging",
+						"fileSystem": "datamovement"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_lightstorage')]"
 			]
 		},
 		{
@@ -150,21 +603,41 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/StagingFolder')]",
+			"name": "[concat(parameters('factoryName'), '/RestResource1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "ls_lightstorage",
+					"referenceName": "ls_RestService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "http://dummy.restapiexample.com/api/v1/employees"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_RestService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_RestAPI",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "staging",
-						"fileSystem": "datamovement"
+						"type": "AzureBlobStorageLocation",
+						"fileName": "empfile.txt",
+						"container": "restcontainer"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -173,7 +646,289 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_lightstorage')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_RestAPI')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/File_Validation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "validates files then accepts or rejects them",
+				"activities": [
+					{
+						"name": "Duplicate File CHeck",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[fv_duplicate_file_chec]",
+								"storedProcedureParameters": {
+									"pfile_name": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.pFileName",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "ds_light_Pull_Master",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Duplicate File CHeck",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(activity('Duplicate File CHeck').output.firstRow.a,'not exists')",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Update to failed",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[fv_insert_Update_Tracking]",
+										"storedProcedureParameters": {
+											"pBatchid": {
+												"value": {
+													"value": "@pipeline().parameters.pBatchId",
+													"type": "Expression"
+												},
+												"type": "Int32"
+											},
+											"pFileName": {
+												"value": {
+													"value": "@pipeline().parameters.pFileName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"pReason": {
+												"value": "File with same name already processed",
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_light",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "File_name_check",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "If Condition1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[fv_filename_validation]",
+							"storedProcedureParameters": {
+								"BHID": {
+									"value": {
+										"value": "@pipeline().parameters.pBatchId",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								},
+								"var": {
+									"value": {
+										"value": "@pipeline().parameters.pFileName",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_light",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Get_column_count",
+						"type": "GetMetadata",
+						"dependsOn": [
+							{
+								"activity": "File_name_check",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_fv_stagingFolderFile",
+								"type": "DatasetReference",
+								"parameters": {
+									"ds_p_fileName": {
+										"value": "@pipeline().parameters.pFileName",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"columnCount",
+								"structure"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Get_column_count",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "GetColNamesFromDatabase",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "File_Structure_Validation",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"pInvokedFileStructure": {
+									"value": "@activity('Get_column_count').output.structure",
+									"type": "Expression"
+								},
+								"pInvokedFileColCount": {
+									"value": "@activity('Get_column_count').output.columnCount",
+									"type": "Expression"
+								},
+								"pInvokedFileName": {
+									"value": "@pipeline().parameters.pFileName",
+									"type": "Expression"
+								},
+								"pDatabaseStructure": {
+									"value": "@activity('GetColNamesFromDatabase').output.value",
+									"type": "Expression"
+								},
+								"pBHID": {
+									"value": "@pipeline().parameters.pBatchId",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "GetColNamesFromDatabase",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select columnname from FV_name_check where source_identified='sr' ",
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "ds_light_Pull_Master",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"parameters": {
+					"pFileName": {
+						"type": "string",
+						"defaultValue": "abc"
+					},
+					"pBatchId": {
+						"type": "string",
+						"defaultValue": "23"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_light_Pull_Master')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_light')]",
+				"[concat(variables('factoryId'), '/datasets/ds_fv_stagingFolderFile')]",
+				"[concat(variables('factoryId'), '/pipelines/File_Structure_Validation')]"
 			]
 		},
 		{
@@ -476,15 +1231,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/File_Validation')]",
+			"name": "[concat(parameters('factoryName'), '/RESTAPI')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "validates files then accepts or rejects them",
 				"activities": [
 					{
-						"name": "File_exists_check",
-						"type": "Lookup",
+						"name": "Copy data1",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -496,79 +1250,45 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[fv_duplicate_file_chec]",
-								"storedProcedureParameters": {
-									"pfile_name": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.pFileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00"
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET"
 							},
-							"dataset": {
-								"referenceName": "ds_light_Pull_Master",
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "RestResource1",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
-						}
-					}
-				],
-				"parameters": {
-					"pFileName": {
-						"type": "string",
-						"defaultValue": "abc"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_light_Pull_Master')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Master_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "pip_source_tbl",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "stl",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "pip_source_tbl_copy1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "tobefailed",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
+						],
+						"outputs": [
+							{
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/stl')]",
-				"[concat(variables('factoryId'), '/pipelines/tobefailed')]"
+				"[concat(variables('factoryId'), '/datasets/RestResource1')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
 			]
 		},
 		{
@@ -632,7 +1352,8 @@
 								"childItems"
 							],
 							"storeSettings": {
-								"type": "AzureBlobFSReadSettings"
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true
 							},
 							"formatSettings": {
 								"type": "DelimitedTextReadSettings"
@@ -661,7 +1382,14 @@
 								{
 									"name": "File validation pipeline",
 									"type": "ExecutePipeline",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Insert File Entry",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
@@ -671,10 +1399,54 @@
 										"waitOnCompletion": true,
 										"parameters": {
 											"pFileName": {
-												"value": "item().name",
+												"value": "@{item().name}",
+												"type": "Expression"
+											},
+											"pBatchId": {
+												"value": "@activity('Create Batch Id').output.firstRow.a",
 												"type": "Expression"
 											}
 										}
+									}
+								},
+								{
+									"name": "Insert File Entry",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[fv_insert_Update_Tracking]",
+										"storedProcedureParameters": {
+											"pBatchid": {
+												"value": {
+													"value": "@activity('Create Batch Id').output.firstRow.a",
+													"type": "Expression"
+												},
+												"type": "Int32"
+											},
+											"pFileName": {
+												"value": {
+													"value": "@{item().name}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"pReason": {
+												"value": null,
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_light",
+										"type": "LinkedServiceReference"
 									}
 								}
 							]
@@ -686,7 +1458,50 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_light_Pull_Master')]",
 				"[concat(variables('factoryId'), '/datasets/StagingFolder')]",
-				"[concat(variables('factoryId'), '/pipelines/File_Validation')]"
+				"[concat(variables('factoryId'), '/pipelines/File_Validation')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_light')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Master_Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "pip_source_tbl",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "stl",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "pip_source_tbl_copy1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "tobefailed",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/stl')]",
+				"[concat(variables('factoryId'), '/pipelines/tobefailed')]"
 			]
 		}
 	]

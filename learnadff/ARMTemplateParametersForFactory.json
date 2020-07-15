@@ -5,14 +5,26 @@
 		"factoryName": {
 			"value": "learnadff"
 		},
+		"ls_af_functionKey": {
+			"value": ""
+		},
 		"ls_light_connectionString": {
 			"value": ""
 		},
 		"ls_lightstorage_accountKey": {
 			"value": ""
 		},
+		"ls_blob_RestAPI_connectionString": {
+			"value": ""
+		},
+		"ls_af_properties_typeProperties_functionAppUrl": {
+			"value": "https://sqlforapp.azurewebsites.net"
+		},
 		"ls_lightstorage_properties_typeProperties_url": {
 			"value": "https://lighttstorage.dfs.core.windows.net"
+		},
+		"ls_RestService_properties_typeProperties_url": {
+			"value": "http://dummy.restapiexample.com/api/v1/employees"
 		}
 	}
 }
