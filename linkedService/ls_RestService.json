@@ -1,9 +1,7 @@
 {
 	"name": "ls_RestService",
 	"properties": {
-		"annotations": [
-			"data"
-		],
+		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
 			"url": "http://dummy.restapiexample.com/api/v1/employees",
