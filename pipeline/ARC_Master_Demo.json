@@ -187,40 +187,6 @@
 						"type": "DatasetReference"
 					}
 				}
-			},
-			{
-				"name": "sendMailFail",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "exec_ARC_DEMO1",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "SendGridPipeline",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"DataFactoryName": {
-							"value": "@pipeline().DataFactory",
-							"type": "Expression"
-						},
-						"PipelineName": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						},
-						"ErrorMessage": {
-							"value": "@activity('exec_ARC_DEMO1').error.message",
-							"type": "Expression"
-						}
-					}
-				}
 			}
 		],
 		"annotations": []
