@@ -39,6 +39,15 @@
 			},
 			"EmailTo": {
 				"type": "string"
+			},
+			"BDID": {
+				"type": "int"
+			},
+			"PBDID": {
+				"type": "int"
+			},
+			"BHID": {
+				"type": "int"
 			}
 		},
 		"annotations": []
