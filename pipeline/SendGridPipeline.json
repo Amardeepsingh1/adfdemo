@@ -5,7 +5,14 @@
 			{
 				"name": "Call ADF notification LA",
 				"type": "WebActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Fail_BatchDetail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -25,6 +32,56 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Fail_BatchDetail",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Fail_BatchDetail]",
+					"storedProcedureParameters": {
+						"pBHID": {
+							"value": {
+								"value": "@pipeline().parameters.BHID",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"pErrorMessage": {
+							"value": {
+								"value": "@pipeline().parameters.ErrorMessage",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"pPBDID": {
+							"value": {
+								"value": "@pipeline().parameters.PBDID",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"pPipeLineName": {
+							"value": {
+								"value": "@pipeline().parameters.PipelineName",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_light",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"parameters": {
@@ -39,9 +96,6 @@
 			},
 			"EmailTo": {
 				"type": "string"
-			},
-			"BDID": {
-				"type": "int"
 			},
 			"PBDID": {
 				"type": "int"

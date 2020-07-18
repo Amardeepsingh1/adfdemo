@@ -116,6 +116,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "exec_ARC_DEMO2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -199,11 +205,52 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "exec_ARC_DEMO2",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "ac_Create_BatchDetail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "ARC_DEMO_2",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BHID": {
+							"value": "@activity('ac_Create_BatchHeader').output.firstRow.BHID",
+							"type": "Expression"
+						},
+						"PBDID": {
+							"value": "@activity('ac_Create_BatchDetail').output.firstRow.BDID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "sendMailFail",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "exec_ARC_DEMO2",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SendGridPipeline",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}
