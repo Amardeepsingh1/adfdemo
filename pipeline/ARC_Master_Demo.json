@@ -94,7 +94,17 @@
 						"referenceName": "ARC_DEMO_1",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"BHID": {
+							"value": "@activity('ac_Create_BatchHeader').output.firstRow.BHID",
+							"type": "Expression"
+						},
+						"PBDID": {
+							"value": "@activity('ac_Create_BatchDetail').output.firstRow.BDID",
+							"type": "Expression"
+						}
+					}
 				}
 			},
 			{
