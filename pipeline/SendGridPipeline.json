@@ -74,7 +74,7 @@
 								"value": "@pipeline().parameters.PipelineName",
 								"type": "Expression"
 							},
-							"type": "Int32"
+							"type": "String"
 						}
 					}
 				},
