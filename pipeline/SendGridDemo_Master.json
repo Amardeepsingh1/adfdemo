@@ -32,7 +32,22 @@
 						"referenceName": "SendGridPipeline",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"DataFactoryName": {
+							"value": "@pipeline().DataFactory",
+							"type": "Expression"
+						},
+						"PipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": {
+							"value": "@activity('Execute Pipeline1').error.message",
+							"type": "Expression"
+						},
+						"EmailTo": "abc"
+					}
 				}
 			}
 		],
