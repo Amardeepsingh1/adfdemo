@@ -1,0 +1,28 @@
+{
+	"name": "SendGrid_Chile_TobeFailed",
+	"properties": {
+		"activities": [
+			{
+				"name": "FailProc",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[get_conf_value]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_light",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
