@@ -251,7 +251,26 @@
 						"referenceName": "SendGridPipeline",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"DataFactoryName": {
+							"value": "@pipeline().DataFactory",
+							"type": "Expression"
+						},
+						"PipelineName": "ARC_DEMO_2",
+						"ErrorMessage": {
+							"value": "@activity('exec_ARC_DEMO2').error.message",
+							"type": "Expression"
+						},
+						"PBDID": {
+							"value": "@activity('ac_Create_BatchDetail').output.firstRow.BDID",
+							"type": "Expression"
+						},
+						"BHID": {
+							"value": "@activity('ac_Create_BatchHeader').output.firstRow.BHID",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
