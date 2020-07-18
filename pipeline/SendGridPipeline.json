@@ -48,7 +48,7 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"value": "{\n    \"DataFactoryName\":\n        \"@{pipeline().DataFactory}\",\n    \"PipelineName\":\n        \"@{pipeline().Pipeline}\",\n    \"ErrorMessage\":\n        \"@{activity('FailProcedure').error.message}\",\n    \"EmailTo\":\n        \"amardeep.singh@kantar.com\"\n}",
+						"value": "{\n    \"DataFactoryName\":\n        \"@{pipeline().DataFactory}\",\n    \"PipelineName\":\n        \"@{pipeline().Pipeline}\",\n    \"ErrorMessage\":\n        \"@{activity('FailProcedure').error.message}\",\n    \"EmailTo\":\n        \"amardeep.singh@kantar.com;singhgaml0@gmail.com\"\n}",
 						"type": "Expression"
 					}
 				}
