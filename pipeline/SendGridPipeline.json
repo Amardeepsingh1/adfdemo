@@ -21,12 +21,26 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"value": "{\n    \"DataFactoryName\":\n        \"@{pipeline().DataFactory}\",\n    \"PipelineName\":\n        \"@{pipeline().Pipeline}\",\n    \"ErrorMessage\":\n        \"@{activity('FailProcedure').error.message}\",\n    \"EmailTo\":\n        \"amardeep.singh@kantar.com;singhgaml0@gmail.com\"\n}",
+						"value": "{\n    \"DataFactoryName\":\n        \"@{pipeline().parameters.DataFactoryName}\",\n    \"PipelineName\":\n        \"@{pipeline().parameters.PipelineName}\",\n    \"ErrorMessage\":\n        \"@{pipeline().parameters.ErrorMessage}\",\n    \"EmailTo\":\n        \"amardeep.singh@kantar.com;singhgaml0@gmail.com\"\n}",
 						"type": "Expression"
 					}
 				}
 			}
 		],
+		"parameters": {
+			"DataFactoryName": {
+				"type": "string"
+			},
+			"PipelineName": {
+				"type": "string"
+			},
+			"ErrorMessage": {
+				"type": "string"
+			},
+			"EmailTo": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
