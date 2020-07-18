@@ -1,6 +1,83 @@
 {
 	"name": "ARC_Master_Demo",
 	"properties": {
+		"activities": [
+			{
+				"name": "ac_Create_BatchHeader",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[Create_BatchHeader]",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ac_Create_BatchDetail",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "ac_Create_BatchHeader",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[Create_BatchDetail]",
+						"storedProcedureParameters": {
+							"pBHID": {
+								"type": "Int32",
+								"value": {
+									"value": "@activity('ac_Create_BatchHeader').output.firstRow.BHID",
+									"type": "Expression"
+								}
+							},
+							"pPBDID": {
+								"type": "Int32",
+								"value": "0"
+							},
+							"pPipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
 		"annotations": []
 	}
 }
