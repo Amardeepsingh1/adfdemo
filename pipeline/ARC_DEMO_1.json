@@ -5,13 +5,129 @@
 			{
 				"name": "Wait1",
 				"type": "Wait",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "ac_Create_BatchDetail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"waitTimeInSeconds": 1
 				}
+			},
+			{
+				"name": "ac_Create_BatchDetail",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[Create_BatchDetail]",
+						"storedProcedureParameters": {
+							"pBHID": {
+								"type": "Int32",
+								"value": {
+									"value": "@pipeline().parameters.BHID",
+									"type": "Expression"
+								}
+							},
+							"pPBDID": {
+								"type": "Int32",
+								"value": {
+									"value": "@pipeline().parameters.PBDID",
+									"type": "Expression"
+								}
+							},
+							"pPipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ac_finish_BatchDetail",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[Finish_BatchDetail]",
+						"storedProcedureParameters": {
+							"pBDID": {
+								"type": "Int32",
+								"value": {
+									"value": "@activity('ac_Create_BatchDetail').output.firstRow.BDID",
+									"type": "Expression"
+								}
+							},
+							"pBHID": {
+								"type": "Int32",
+								"value": {
+									"value": "@pipeline().parameters.BHID",
+									"type": "Expression"
+								}
+							},
+							"pPBDID": {
+								"type": "Int32",
+								"value": {
+									"value": "@pipeline().parameters.PBDID",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"BHID": {
+				"type": "string"
+			},
+			"PBDID": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
