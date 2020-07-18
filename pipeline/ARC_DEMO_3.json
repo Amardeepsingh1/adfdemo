@@ -1,10 +1,10 @@
 {
-	"name": "ARC_DEMO_1",
+	"name": "ARC_DEMO_3",
 	"properties": {
 		"activities": [
 			{
-				"name": "Wait1",
-				"type": "Wait",
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
 						"activity": "ac_Create_BatchDetail",
@@ -13,9 +13,20 @@
 						]
 					}
 				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 1
+					"storedProcedureName": "[dbo].[fv_filename_validation]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_light",
+					"type": "LinkedServiceReference"
 				}
 			},
 			{
@@ -70,7 +81,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1",
+						"activity": "Stored procedure1",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -118,44 +129,14 @@
 						"type": "DatasetReference"
 					}
 				}
-			},
-			{
-				"name": "Execute Pipeline1",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Wait1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "ARC_DEMO_3",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"BHID": {
-							"value": "@pipeline().parameters.BHID",
-							"type": "Expression"
-						},
-						"PBDID": {
-							"value": "@pipeline().parameters.PBDID",
-							"type": "Expression"
-						}
-					}
-				}
 			}
 		],
 		"parameters": {
 			"BHID": {
-				"type": "string"
+				"type": "int"
 			},
 			"PBDID": {
-				"type": "string"
+				"type": "int"
 			}
 		},
 		"annotations": []

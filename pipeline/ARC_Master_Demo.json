@@ -112,15 +112,15 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "exec_ARC_DEMO1",
+						"activity": "exec_ARC_DEMO2",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					},
 					{
-						"activity": "exec_ARC_DEMO2",
+						"activity": "exec_ARC_DEMO1",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
