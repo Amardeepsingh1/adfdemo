@@ -9,7 +9,7 @@
 					{
 						"activity": "ac_Create_BatchDetail",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
@@ -72,7 +72,7 @@
 					{
 						"activity": "exec_ARC_DEMO3",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
