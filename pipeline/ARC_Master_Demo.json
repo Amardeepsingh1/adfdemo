@@ -147,6 +147,46 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "Finish_BatchHeader",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Finish_BatchDetail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[Finish_BatchHeader]",
+						"storedProcedureParameters": {
+							"pBHID": {
+								"type": "Int32",
+								"value": {
+									"value": "@activity('ac_Create_BatchHeader').output.firstRow.BHID",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "ds_light_Pull_Master",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"annotations": []
