@@ -70,7 +70,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1",
+						"activity": "exec_ARC_DEMO3",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -120,7 +120,7 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "exec_ARC_DEMO3",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -144,6 +144,45 @@
 						},
 						"PBDID": {
 							"value": "@activity('ac_Create_BatchDetail').output.firstRow.BDID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "sendMailFail",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "exec_ARC_DEMO3",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SendGridPipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"DataFactoryName": {
+							"value": "@pipeline().DataFactory",
+							"type": "Expression"
+						},
+						"PipelineName": "ARC_DEMO_3",
+						"ErrorMessage": {
+							"value": "@activity('exec_ARC_DEMO3').error.message",
+							"type": "Expression"
+						},
+						"PBDID": {
+							"value": "@activity('ac_Create_BatchDetail').output.firstRow.BDID",
+							"type": "Expression"
+						},
+						"BHID": {
+							"value": "@pipeline().parameters.BHID",
 							"type": "Expression"
 						}
 					}

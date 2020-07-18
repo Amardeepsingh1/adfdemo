@@ -9,7 +9,7 @@
 					{
 						"activity": "ac_Create_BatchDetail",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
@@ -83,7 +83,7 @@
 					{
 						"activity": "Stored procedure1",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
