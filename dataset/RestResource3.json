@@ -1,0 +1,12 @@
+{
+	"name": "RestResource3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "REST TEMP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
